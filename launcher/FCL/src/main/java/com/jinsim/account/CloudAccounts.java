@@ -8,7 +8,11 @@ import android.os.Looper;
 import com.jinsim.account.ui.MsaLoginActivity;
 import com.jinsim.account.ui.PersonalCenterActivity;
 import com.tungsten.fcl.setting.Accounts;
+import com.tungsten.fclcore.auth.Account;
+import com.tungsten.fclcore.auth.authlibinjector.AuthlibInjectorAccount;
+import com.tungsten.fclcore.auth.offline.OfflineAccount;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +40,14 @@ public final class CloudAccounts {
             if (onDone != null) onDone.run();
             return;
         }
+        // 主线程取一份快照，避免工作线程直接读 ObservableList
+        final List<Account> local = new ArrayList<>(Accounts.getAccounts());
         Thread worker = new Thread(() -> {
+            try {
+                pushMissingSync(session, local);
+            } catch (Exception ignored) {
+                // 登记失败不影响本地使用，下次进页面再试
+            }
             List<BoundAccount> cloud = null;
             try {
                 cloud = JslApi.INSTANCE.pullAccounts(session);
@@ -56,28 +67,78 @@ public final class CloudAccounts {
     }
 
     private static void merge(List<BoundAccount> cloud, String session) {
-        outer:
         for (BoundAccount bound : cloud) {
-            if (bound.getType() != AccountType.MICROSOFT) continue;
             UUID uuid = parseUuid(bound.getUuid());
             if (uuid == null) continue;
             String name = bound.getPlayerName().isEmpty() ? bound.getDisplayName() : bound.getPlayerName();
             if (name == null || name.isEmpty()) continue;
-            long accountId = parseLong(bound.getId());
-            if (accountId <= 0L) continue;
 
-            // 已存在且还是同一个云端 id：保留已有令牌，避免重复请求
-            for (com.tungsten.fclcore.auth.Account existing : Accounts.getAccounts()) {
-                if (existing instanceof JslMsaAccount
-                        && ((JslMsaAccount) existing).getAccountId() == accountId
-                        && existing.getUUID().equals(uuid)) {
-                    continue outer;
+            switch (bound.getType()) {
+                case OFFLINE: {
+                    // 本地已经有这个 uuid（可能带自定义皮肤），不重建，避免皮肤丢失
+                    if (findLocal(uuid) != null) continue;
+                    Account offline = Accounts.FACTORY_OFFLINE.create(name, uuid);
+                    Accounts.replaceAccount(uuid, offline);
+                    break;
                 }
+                case AUTHLIB: {
+                    // 第三方皮肤站账号要靠本地密码会话换 yggdrasil 令牌，
+                    // 跨设备只能同步“存在这个账号”，启动仍需在本机重新登录一次
+                    if (findLocal(uuid) != null) continue;
+                    break;
+                }
+                case MICROSOFT: {
+                    long accountId = parseLong(bound.getId());
+                    if (accountId <= 0L) continue;
+                    Account existing = findLocal(uuid);
+                    if (existing instanceof JslMsaAccount
+                            && ((JslMsaAccount) existing).getAccountId() == accountId) {
+                        continue;
+                    }
+                    JslMsaAccount account = new JslMsaAccount(name, uuid, accountId, "", 0L, session);
+                    Accounts.replaceAccount(uuid, account);
+                    JslSkins.ensureAsync(account);
+                    break;
+                }
+                default:
+                    break;
             }
-            JslMsaAccount account = new JslMsaAccount(name, uuid, accountId, "", 0L, session);
-            Accounts.replaceAccount(uuid, account);
-            JslSkins.ensureAsync(account);
         }
+    }
+
+    private static Account findLocal(UUID uuid) {
+        for (Account account : Accounts.getAccounts()) {
+            if (account.getUUID().equals(uuid)) return account;
+        }
+        return null;
+    }
+
+    /**
+     * 统一账号 ID：本地有的离线 / 第三方账号，云端没有登记的补一条，
+     * 这样三种账号在云端都占同一张表的一行、同一个 id，资料以服务端为准。
+     */
+    private static void pushMissingSync(String session, List<Account> local) throws Exception {
+        List<BoundAccount> cloud = JslApi.INSTANCE.pullAccounts(session);
+        for (Account account : local) {
+            String uuidHex = account.getUUID().toString().replace("-", "");
+            if (containsUuid(cloud, uuidHex)) continue;
+            if (account instanceof OfflineAccount) {
+                JslApi.pushOffline(session, account.getUsername(), uuidHex);
+            } else if (account instanceof AuthlibInjectorAccount) {
+                String url = ((AuthlibInjectorAccount) account).getServer().getUrl();
+                JslApi.pushAuthlib(session, account.getUsername(), uuidHex, url);
+            }
+        }
+    }
+
+    private static boolean containsUuid(List<BoundAccount> cloud, String uuidHex) {
+        for (BoundAccount bound : cloud) {
+            if (parseUuid(bound.getUuid()) != null
+                    && parseUuid(bound.getUuid()).toString().replace("-", "").equalsIgnoreCase(uuidHex)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** 绑定成功后立刻写进原生账号页，回到页面就能看到（不等下一次云端同步） */

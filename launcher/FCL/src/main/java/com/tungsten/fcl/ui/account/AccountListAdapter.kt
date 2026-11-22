@@ -48,7 +48,10 @@ class AccountListAdapter(
     ) {
         val item = list[position]
         val binding = ItemAccountBinding.bind(holder.itemView)
-        binding.radio.isChecked = item.account == Accounts.getSelectedAccount()
+        // Account.equals() 只比较 portable 字段，两个非便携账号会互相相等，
+        // 直接用 == 会让列表里所有微软/LittleSkin 账号同时显示为选中，这里按 UUID 判定
+        binding.radio.isChecked =
+            item.account.uuid == Accounts.getSelectedAccount()?.uuid
         binding.avatar.imageProperty().unbind()
         binding.avatar.imageProperty().bind(item.image)
         binding.name.stringProperty().unbind()

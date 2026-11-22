@@ -21,7 +21,7 @@ object LaunchArgs {
      */
     fun build(repo: AccountRepository, account: BoundAccount): Args {
         return when (account.type) {
-            AccountType.OFFLINE -> Args(
+            AccountType.OFFLINE, AccountType.AUTHLIB -> Args(
                 username = account.playerName,
                 uuid = account.uuid.ifBlank { OfflineAccounts.uuidForName(account.playerName) },
                 userType = "legacy"

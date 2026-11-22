@@ -70,6 +70,24 @@ object JslApi {
         return parseAccounts(json.optJSONArray("accounts"))
     }
 
+    /** 把本地离线账号登记到云端：POST /accounts/offline（幂等由调用方按 uuid 判定） */
+    @JvmStatic
+    fun pushOffline(token: String, name: String, uuid: String): String? {
+        val body = JSONObject().put("name", name).put("uuid", uuid).toString()
+        val json = JSONObject(Http.postJson("$BASE_URL/accounts/offline", body, token))
+        if (!json.optBoolean("ok", false)) throw IllegalStateException(json.optString("message").ifBlank { "登记离线账号失败" })
+        return json.optJSONObject("account")?.optString("id")
+    }
+
+    /** 把第三方皮肤站账号登记到云端：POST /accounts/authlib */
+    @JvmStatic
+    fun pushAuthlib(token: String, name: String, uuid: String, serverUrl: String): String? {
+        val body = JSONObject().put("name", name).put("uuid", uuid).put("server_url", serverUrl).toString()
+        val json = JSONObject(Http.postJson("$BASE_URL/accounts/authlib", body, token))
+        if (!json.optBoolean("ok", false)) throw IllegalStateException(json.optString("message").ifBlank { "登记第三方账号失败" })
+        return json.optJSONObject("account")?.optString("id")
+    }
+
     fun deleteAccount(token: String, id: String) {
         Http.delete("$BASE_URL/accounts/$id", token)
     }
@@ -139,6 +157,7 @@ object JslApi {
                     refreshTokenCipher = null,
                     accessTokenCipher = null,
                     accessTokenExpiresAt = 0L,
+                    serverUrl = o.optString("server_url").ifBlank { null },
                     isDefault = o.optBoolean("is_default", false),
                     addedAt = 0L
                 )

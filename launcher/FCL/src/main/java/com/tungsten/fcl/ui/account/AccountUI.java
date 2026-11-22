@@ -150,7 +150,10 @@ public class AccountUI extends FCLCommonUI implements View.OnClickListener {
             server = new AuthlibInjectorServer(url);
             ConfigHolder.config().getAuthlibInjectorServers().add(server);
         }
-        new CreateAccountDialog(getContext(), server).show();
+        CreateAccountDialog dialog = new CreateAccountDialog(getContext(), server);
+        // 第三方账号登录成功后直接登记到云端，换设备能从账号页看到
+        dialog.setOnDismissListener(d -> CloudAccounts.refresh(getContext(), this::loadAccounts));
+        dialog.show();
     }
 
     public void loadAccounts() {
@@ -169,6 +172,8 @@ public class AccountUI extends FCLCommonUI implements View.OnClickListener {
     public void onClick(View view) {
         if (view == addOfflineAccount) {
             CreateAccountDialog dialog = new CreateAccountDialog(getContext(), Accounts.FACTORY_OFFLINE);
+            // 关掉弹窗后立刻把新建的离线账号登记到云端（已登录时），列表再按云端数据重排
+            dialog.setOnDismissListener(d -> CloudAccounts.refresh(getContext(), this::loadAccounts));
             dialog.show();
         }
         if (view == addMicrosoftAccount) {

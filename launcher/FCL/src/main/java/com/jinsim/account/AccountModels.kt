@@ -6,7 +6,8 @@ import org.json.JSONObject
 enum class AccountType {
     JINSIM,
     MICROSOFT,
-    OFFLINE;
+    OFFLINE,
+    AUTHLIB;
 
     companion object {
         fun of(raw: String?): AccountType = try {
@@ -50,6 +51,8 @@ data class BoundAccount(
     /** 微软 access_token 的密文 + 过期时间（毫秒），启动前会按需刷新 */
     val accessTokenCipher: String? = null,
     val accessTokenExpiresAt: Long = 0L,
+    /** 第三方皮肤站（authlib-injector）地址；仅 AUTHLIB 类型有值 */
+    val serverUrl: String? = null,
     val isDefault: Boolean = false,
     val addedAt: Long = System.currentTimeMillis()
 ) {
@@ -63,6 +66,7 @@ data class BoundAccount(
         put("refreshTokenCipher", refreshTokenCipher)
         put("accessTokenCipher", accessTokenCipher)
         put("accessTokenExpiresAt", accessTokenExpiresAt)
+        put("serverUrl", serverUrl)
         put("isDefault", isDefault)
         put("addedAt", addedAt)
     }
@@ -78,6 +82,7 @@ data class BoundAccount(
             refreshTokenCipher = o.optString("refreshTokenCipher").ifBlank { null },
             accessTokenCipher = o.optString("accessTokenCipher").ifBlank { null },
             accessTokenExpiresAt = o.optLong("accessTokenExpiresAt"),
+            serverUrl = o.optString("serverUrl").ifBlank { null },
             isDefault = o.optBoolean("isDefault"),
             addedAt = o.optLong("addedAt")
         )

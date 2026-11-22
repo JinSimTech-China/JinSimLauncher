@@ -44,10 +44,12 @@ class AccountAdapter(
                 AccountType.JINSIM -> "JS"
                 AccountType.MICROSOFT -> "MS"
                 AccountType.OFFLINE -> "OF"
+                AccountType.AUTHLIB -> "TP"
             }
             name.text = account.displayName.ifBlank { account.playerName }
             sub.text = when (account.type) {
                 AccountType.OFFLINE -> "离线 · ${account.uuid.take(8)}"
+                AccountType.AUTHLIB -> "第三方 · ${account.serverUrl ?: "皮肤站"}"
                 AccountType.MICROSOFT -> "微软 · ${account.uuid.ifBlank { "待同步" }.take(8)}"
                 AccountType.JINSIM -> "Jinsim · ${account.playerName}"
             }
