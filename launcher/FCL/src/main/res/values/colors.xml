@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主色：靛蓝紫（对齐 JinSimp 风格登录页的主按钮 #99DAD6） -->
+    <color name="default_theme_color">#99DAD6</color>
+    <color name="default_theme_color_dark">#7C6DFF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <!-- 面板/侧边栏底色：淡薰衣草白 -->
+    <color name="ui_bg_color">#F5F2F4FB</color>
+    <color name="right_menu_color">#F7F8FD</color>
+    <color name="icon_background_color">#FFFFFF</color>
+    <color name="primary_text">#1B1B22</color>
+    <!-- 原 FCLLibrary 模块颜色（模块已并入 FCL）：弹窗改为纯白卡片 -->
+    <color name="dialog_background">#FFFFFF</color>
+    <!-- 输入框/次级填充色（对齐参考图 #E8EFFD） -->
+    <color name="field_fill_color">#E8EFFD</color>
+    <color name="field_fill_focus_color">#DCE5FB</color>
+    <!-- 次级文字（说明/提示） -->
+    <color name="secondary_text">#6B7080</color>
+</resources>

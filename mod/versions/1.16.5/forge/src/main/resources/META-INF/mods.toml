@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="GPL-3.0"
+[[mods]]
+modId="jinsimtouch"
+version="${file.jarVersion}"
+displayName="JinSimTouch"
+authors="JinSim"
+description='''
+Client-only HUD layer for JinSimLauncher: shows or hides the on-screen touch keys by reading
+com.jinjsl.bridge.JslTouchBridge through a cached VarHandle. No server code.
+'''
+[[dependencies.jinsimtouch]]
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="CLIENT"
+[[dependencies.jinsimtouch]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="CLIENT"

@@ -1,0 +1,44 @@
+# 构建产物与本地环境
+dist/
+*.apk
+*.apks
+*.aab
+build.log
+launcher/build/
+launcher/FCL/build/
+launcher/.gradle/
+launcher/build.gradle.kts.bak
+local.properties
+mod/**/build/
+mod/**/.gradle/
+
+# 签名与密钥（绝不入库）
+*.jks
+*.keystore
+*.pepk
+key-store.jks*
+debug-key.jks*
+private_key.pepk
+
+# 后端密钥与部署产物
+backend/.env
+backend/*token*
+backend/web-worker.js
+backend/site-worker.js
+backend/worker-secrets.json
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# 临时文件
+*.tmp
+/tmp/
+
+# 私有组件（服务端 / 官网 / 账号中心前端，不公开发布）
+backend/
+web/
+site/

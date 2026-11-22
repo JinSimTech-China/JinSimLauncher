@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_text">#FFFFFF</color>
+    <!-- 原 FCLLibrary 模块颜色（模块已并入 FCL）：夜间弹窗为深蓝灰卡片 -->
+    <color name="dialog_background">#1B1C26</color>
+    <color name="field_fill_color">#232534</color>
+    <color name="field_fill_focus_color">#2C3050</color>
+    <color name="secondary_text">#A8ACBC</color>
+</resources>

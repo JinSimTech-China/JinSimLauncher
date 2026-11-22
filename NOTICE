@@ -1,0 +1,52 @@
+JinSimLauncher
+Copyright (C) 2026 JinSimTech
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+-------------------------------------------------------------------------------
+第三方来源与授权说明（NOTICE）
+-------------------------------------------------------------------------------
+
+1. 上游项目
+   本项目是 Fold Craft Launcher（下称 FCL）的修改版。
+   上游仓库：https://github.com/FCL-Team/FoldCraftLauncher
+   上游版权：Copyright (C) FCL-Team 及 FCL / HMCL 各贡献者
+   上游协议：GNU General Public License v3.0（GPL-3.0）
+
+   依据 GPL-3.0 第 13 条，本项目将 GPLv3 代码与 AGPLv3 代码组合，
+   整体按 GNU Affero General Public License v3.0（AGPL-3.0）分发。
+   FCL 部分的原始版权与 GPL-3.0 文本仍然有效，不得移除。
+
+2. 本项目的修改（摘要）
+   - 应用名 / 图标 / 主题配色与部分界面重做（JinSimLauncher 品牌化）
+   - 账号模块：新增 JinSim 账号体系（云端账号、微软账号在启动器内完成 OAuth 授权、
+     第三方皮肤站登录），并接入原生账号列表
+   - 公告与更新通道改由自有后端提供（jst-api.jcmj.ren）
+   - 协议文本（EULA / 隐私政策）替换为 JinSimLauncher 版本
+   - 触控模组（mod/）为本项目新增组件
+
+3. 独立组件（不受本项目 AGPL 覆盖）
+   backend/    Cloudflare Worker 服务端（自有实现，另行授权）
+   web/        账号中心前端（自有实现，另行授权）
+   site/       官网静态页（自有实现）
+
+4. 商标与免责
+   「Minecraft」为 Mojang Studios 的商标。本项目非 Mojang Studios、
+   Microsoft 或 FCL 团队的官方产品，与其无隶属或背书关系。
+   本项目不使用 FCL 的名称与美术资源作为自身标识。
+
+5. 源码获取
+   对应源码随发布提供；如通过二进制分发，源码地址见仓库 README。
+   依据 AGPL-3.0 第 13 条，若通过网络向用户提供本程序的服务，
+   应向这些用户提供对应的完整源码。

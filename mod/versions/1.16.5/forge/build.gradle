@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+
+version = project.mod_version
+group = 'com.jinsim'
+base { archivesName = 'jinsimtouch-forge-1.16.5' }
+
+// 1.16.5 需要 JDK 8 编译；用 JDK 17 跑 Gradle 时会通过 toolchain 找到 JDK 8
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+minecraft {
+    mappings channel: 'snapshot', version: '20210309-1.16.5'
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods { jinsimtouch { source sourceSets.main } }
+        }
+    }
+}
+
+sourceSets.main.java.srcDirs += ["${rootDir}/../../core/src/main/java"]
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${project.forge_version}"
+}
+
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }

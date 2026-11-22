@@ -1,0 +1,20 @@
+[
+  {
+    "type": "release",
+    "versionCode": 1347,
+    "versionName": "1.3.4.7",
+    "date": "2026.11.17",
+    "description": [
+      {
+        "lang": "en",
+        "text": "(Translated from Chinese by AI)\n1. Added undo/redo for control editing: the left drawer in edit mode now has undo and redo buttons at the bottom, keeping up to 30 edit steps; adding/removing controls, dragging, resizing, cross-group copy or move and style changes can all be reverted (#1991)\n2. Fixed a crash when editing saved button or direction styles, caused by draft style properties bound to the dialog controls leaking into the style registry (#2018)\n3. Fixed a launcher crash caused by oversized pack.png resource pack icons, which are now downsampled to their display size instead of being decoded at full size (#2015)\n4. Fixed progress bars, sliders, the dynamic island, text fields and number seek bars becoming invisible when the theme color alpha is set to 0 (#2016)\n5. Fixed Vulkan detection reporting the custom driver as loaded when the driver is actually missing\n6. Fixed line breaks not taking effect in the modpack description dialog"
+      },
+      {
+        "lang": "zh_CN",
+        "text": "(若启动器内下载缓慢请使用网盘下载,64位的请下载arm64，不知道该下哪个的请下载all）\n1.新增按键编辑撤销/恢复：编辑模式左抽屉底部新增撤销与恢复按钮，最多保留 30 步编辑历史，增删控件、拖动、缩放、跨组复制移动与样式修改均可回退 (#1991)\n2.修复编辑已保存的按键、方向样式时因属性绑定泄漏导致的崩溃 (#2018)\n3.修复超大 pack.png 资源包图标导致启动器崩溃的问题，图标现按显示尺寸降采样解码 (#2015)\n4.修复主题色透明度调为 0 时进度条、滑条、动态岛、输入框与数字滑条不可见的问题 (#2016)\n5.修复自定义驱动缺失时 Vulkan 检测误报驱动已加载的问题\n6.修复整合包描述对话框换行符不生效的问题"
+      }
+    ],
+    "netdiskUrl": "https://pan.quark.cn/s/da5128f8986c",
+    "url": "https://github.com/FCL-Team/FoldCraftLauncher/releases/download/1.3.4.7/FCL-release-1.3.4.7-all.apk"
+  }
+]

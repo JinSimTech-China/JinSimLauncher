@@ -1,0 +1,8 @@
+pluginManagement {
+    repositories {
+        maven { name = 'Forge'; url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'jinsimtouch-forge-1.16.5'

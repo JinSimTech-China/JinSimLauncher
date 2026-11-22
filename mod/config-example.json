@@ -1,0 +1,7 @@
+{
+  "mode": "AUTO",
+  "debounceMs": 800,
+  "showDebug": true,
+  "showActionKeys": true,
+  "keyScale": 1.0
+}
