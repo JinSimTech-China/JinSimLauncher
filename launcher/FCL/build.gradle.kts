@@ -78,7 +78,7 @@ android {
         applicationId = "jsl.hlgo.fun"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1357
+        versionCode = 1358
         versionName = "0.1.1-alpha"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {

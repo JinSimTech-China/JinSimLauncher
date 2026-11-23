@@ -187,12 +187,10 @@ class AboutPage(context: Context?, id: Int) : FCLPage(context, id, R.layout.page
         private const val QQ_GROUP_KEY = "9_Mnxe5x1l6L7giLuRYQyBh0iWBgCUbw"
 
         private val LINKS = listOf(
-            LinkItem(R.string.about_launcher, "https://fcl-team.github.io/"),
-            LinkItem(R.string.about_developer, "https://github.com/FCL-Team"),
-            LinkItem(R.string.community_discord, "https://discord.gg/ffhvuXTwyV"),
-            LinkItem(R.string.community_qq, null),
-            LinkItem(R.string.about_sponsor, "https://afdian.com/@tungs"),
-            LinkItem(R.string.about_source, "https://github.com/FCL-Team/FoldCraftLauncher"),
+            LinkItem(R.string.about_launcher, "https://jsl-mc.cc.cd"),
+            LinkItem(R.string.about_developer, "https://github.com/JinSimTech-China"),
+            LinkItem(R.string.community_qq, "https://qm.qq.com/q/h3z0hSY6mQ"),
+            LinkItem(R.string.about_source, "https://github.com/JinSimTech-China/JinSimLauncher"),
             LinkItem(R.string.legal_eula, null, LegalAgreement.Document.EULA),
             LinkItem(R.string.legal_privacy, null, LegalAgreement.Document.PRIVACY_POLICY)
         )
