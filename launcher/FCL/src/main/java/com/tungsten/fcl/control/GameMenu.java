@@ -13,6 +13,7 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -101,11 +102,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import com.jinsim.control.PhysicalInputs;
 
 import fr.spse.gamepad_remapper.Remapper;
 import kotlin.Unit;
@@ -156,6 +161,8 @@ public class GameMenu implements MenuCallback, FCLBridgeCallback {
     private TouchController touchController;
 
     private boolean gamepadControl = true;
+    /** 接上物理鼠标键盘时被临时收起的虚拟按键，拔出后按原状态恢复 */
+    private final Map<View, Integer> physicalHiddenViews = new HashMap<>();
     private Thread fpsThread;
     private Thread memoryThread;
     private int lastCursorMode = FCLBridge.CursorEnabled;
@@ -899,6 +906,7 @@ public class GameMenu implements MenuCallback, FCLBridgeCallback {
         initRightMenu();
 
         viewManager.setup();
+        watchPhysicalInput();
 
         // 初始化时应用开关副作用（FPS/内存线程、持续性能模式），
         // 使重启后已开启的设置保持生效（开关行绑定不触发副作用回调）
@@ -953,6 +961,42 @@ public class GameMenu implements MenuCallback, FCLBridgeCallback {
         }
     }
 
+
+    /**
+     * 外接物理鼠标键盘时的自动收纳：
+     * 1) 有真实鼠标 → 隐藏系统鼠标指针（游戏内已有自己的光标，两套并存会重影）
+     * 2) 鼠标 + 键盘同时在线 → 屏幕上的虚拟按键全部收起，拔掉后恢复
+     */
+    private void watchPhysicalInput() {
+        PhysicalInputs.watch(activity, (mouse, keyboard) -> {
+            try {
+                if (mouse) {
+                    activity.getWindow().getDecorView().setPointerIcon(
+                            PointerIcon.getSystemIcon(activity, PointerIcon.TYPE_NULL));
+                } else {
+                    activity.getWindow().getDecorView().setPointerIcon(null);
+                }
+            } catch (Exception ignored) {
+                // 个别 ROM 不支持隐藏指针，忽略即可，不影响游戏
+            }
+            if (cursorView != null) {
+                cursorView.setVisibility(mouse ? View.GONE : View.VISIBLE);
+            }
+            boolean hideKeys = mouse && keyboard;
+            for (int i = 0; i < baseLayout.getChildCount(); i++) {
+                View child = baseLayout.getChildAt(i);
+                if (!(child instanceof CustomControl)) continue;
+                if (hideKeys) {
+                    if (child.getVisibility() == View.VISIBLE) {
+                        physicalHiddenViews.put(child, child.getVisibility());
+                        child.setVisibility(View.GONE);
+                    }
+                } else if (physicalHiddenViews.containsKey(child)) {
+                    child.setVisibility(physicalHiddenViews.remove(child));
+                }
+            }
+        });
+    }
     private void initCursorView(FCLActivity activity) {
         ViewGroup.LayoutParams layoutParams = cursorView.getLayoutParams();
         layoutParams.width = ConvertUtils.dip2px(activity, menuSetting.getMouseSize());
